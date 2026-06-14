@@ -44,7 +44,6 @@
       line-height: 1.5;
       perspective: 1200px;
     }
-    /* Ambient Background blobs */
     .floating-bg-blob {
       position: fixed;
       border-radius: 50%;
@@ -67,12 +66,10 @@
       bottom: -15vw;
       right: -15vw;
     }
-    /* Selection Color */
     ::selection {
       background: rgba(255, 255, 255, 0.15);
       color: var(--text);
     }
-    /* Utility Container */
     .container {
       max-width: 1400px;
       margin: 0 auto;
@@ -81,7 +78,6 @@
       position: relative;
       z-index: 10;
     }
-    /* Header / Navigation */
     header {
       position: fixed;
       top: 0;
@@ -122,6 +118,8 @@
       object-fit: cover;
       border-radius: 8px;
       display: inline-block;
+      opacity: 0;
+      animation: logo-reveal 1.4s ease-out 0.6s forwards;
     }
     .intro-logo {
       width: 16px;
@@ -147,19 +145,16 @@
       height: 100vh;
       touch-action: none;
     }
-
-    /* Exact required overlay/video CSS (fullscreen intro loader) */
     #introOverlay{
-        position:fixed;
-        top:0;
-        left:0;
-        width:100vw;
-        height:100vh;
-        background:#000;
-        z-index:999999;
-        overflow:hidden;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100vw;
+      height:100vh;
+      background:#000;
+      z-index:999999;
+      overflow:hidden;
     }
-
     #introVideo{
       position:absolute;
       top:50%;
@@ -172,34 +167,21 @@
       object-fit: contain;
       display:block;
     }
-
     #mainContent{
-        visibility:hidden;
-        opacity: 0;
-        transition: opacity 0.4s ease;
+      visibility:hidden;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
-
     #mainContent.loaded{
-        visibility:visible;
+      visibility:visible;
     }
-
     .hero-main {
       opacity: 0;
       will-change: filter, opacity, transform;
     }
-
     @keyframes hero-fade-in {
       from { opacity: 0; transform: translateY(18px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-    .site-logo {
-      width: 40px;
-      height: 40px;
-      object-fit: cover;
-      border-radius: 8px;
-      display: inline-block;
-      opacity: 0;
-      animation: logo-reveal 1.4s ease-out 0.6s forwards;
     }
     @keyframes logo-reveal {
       0% { opacity: 0; transform: translateY(-10px) scale(0.8); }
@@ -253,72 +235,115 @@
       position: relative;
       z-index: 1000002 !important;
     }
-    /* ACT 1: HERO */
+
+    /* ===================== HERO ===================== */
     .hero {
       position: relative;
-      height: 100vh;
-      min-height: 700px;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       padding-top: 70px;
-      overflow: hidden;
+      overflow: visible;
       perspective: 1200px;
     }
-    /* Grid Overlay background */
+
+    /* === HERO BACKGROUND VIDEO === */
+    .hero-bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.92;
+      filter: brightness(0.96) contrast(1.08) saturate(0.88);
+      transform: scale(1.01);
+    }
+    /* Dark overlay so text stays readable */
+    .hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 42% 42%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.12) 28%, rgba(0, 0, 0, 0.42) 100%),
+        linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.24) 0%,
+          rgba(0,0,0,0.14) 32%,
+          rgba(0,0,0,0.38) 100%
+        );
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* === END VIDEO === */
+
     .hero-grid-bg {
       position: absolute;
       inset: 0;
       background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), 
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 50px 50px;
+        linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px), 
+        linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+      background-size: 120px 120px;
       background-position: center center;
-      z-index: 1;
+      z-index: 2;
       pointer-events: none;
+      opacity: 0.18;
     }
     .hero-grid-gradient {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 50%, rgba(10, 10, 10, 0) 0%, rgba(0, 0, 0, 0.8) 80%);
-      z-index: 2;
+      background: radial-gradient(circle at 50% 42%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.12) 48%, rgba(0, 0, 0, 0.30) 100%);
+      z-index: 3;
       pointer-events: none;
     }
+
+    /* Text reveal helpers (minimal, premium) */
+    .reveal-word { display: inline-block; transform: translateY(12px); opacity: 0; will-change: transform, opacity; }
+    .reveal-mask { overflow: hidden; display: inline-block; vertical-align: middle; }
+    .emph { position: relative; display: inline-block; color: inherit; }
+    .emph::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: rgba(255,255,255,0.08); transform-origin: left center; transform: scaleX(0); transition: transform 420ms cubic-bezier(.2,.9,.2,1); }
+    .emph.revealed::after { transform: scaleX(1); }
+
     .hero-content {
       position: relative;
       z-index: 10;
       display: flex;
       flex-direction: column;
       height: 100%;
-      justify-content: space-between;
-      padding-bottom: 6vh;
+      justify-content: flex-start;
+      padding-top: 26vh;
+      padding-bottom: 12vh;
     }
     .hero-main {
-      margin-top: auto;
-      margin-bottom: auto;
+      margin-top: 0;
+      margin-bottom: 0;
       perspective: 1000px;
+      max-width: 760px;
     }
     .hero-subtitle-pill {
       display: inline-flex;
       align-items: center;
-      padding: 6px 14px;
+      padding: 8px 18px;
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 100px;
       font-size: 12px;
       font-weight: 600;
-      letter-spacing: 0.05em;
-      margin-bottom: 24px;
+      letter-spacing: 0.08em;
+      margin-bottom: 38px;
       color: var(--text);
     }
     .hero-main h1 {
       font-size: clamp(3.5rem, 11vw, 8.5rem);
       font-weight: 900;
       letter-spacing: -0.05em;
-      line-height: 0.9;
+      line-height: 0.92;
       text-transform: uppercase;
-      margin-bottom: 30px;
+      margin-bottom: 44px;
       transform-style: preserve-3d;
+      text-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
     }
     .word {
       display: inline-block;
@@ -333,9 +358,10 @@
     .hero-desc {
       font-size: clamp(16px, 2.5vw, 22px);
       font-weight: 400;
-      color: var(--text-muted);
-      max-width: 720px;
-      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.92);
+      max-width: 700px;
+      line-height: 1.7;
+      letter-spacing: 0.01em;
     }
     .hero-footer {
       display: flex;
@@ -343,6 +369,7 @@
       gap: 30px;
       border-top: 1px solid var(--border);
       padding-top: 40px;
+      margin-top: 52vh;
     }
     @media (min-width: 768px) {
       .hero-footer {
@@ -388,7 +415,8 @@
         text-align: right;
       }
     }
-    /* ACT 2: ABOUT ME */
+
+    /* ===================== ABOUT ===================== */
     .about {
       padding: 140px 0;
       border-top: 1px solid var(--border);
@@ -413,7 +441,6 @@
       line-height: 1.3;
       color: var(--text);
     }
-    /* Reveal effect styles */
     .reveal-text span {
       color: var(--text-dark);
       transition: color 0.1s linear;
@@ -457,7 +484,8 @@
       background: var(--accent);
       border-radius: 50%;
     }
-    /* ACT 3: FEATURED PROJECT (AI-VAPT Showcase with Sticky Scroll) */
+
+    /* ===================== FEATURED ===================== */
     .featured-project-section {
       background: #000;
       border-top: 1px solid var(--border);
@@ -465,7 +493,7 @@
     }
     .featured-scroll-container {
       position: relative;
-      height: 350vh; /* Controlled scroll length for story steps */
+      height: 350vh;
     }
     .featured-sticky {
       position: sticky;
@@ -613,7 +641,6 @@
       border-color: var(--border-hover);
       transform: translateY(-1px);
     }
-    /* Right pane sticky container: CSS Mock Dashboard with 3D layers */
     .featured-right-pane {
       position: relative;
       height: 50vh;
@@ -639,7 +666,6 @@
       transform-style: preserve-3d;
       will-change: transform;
     }
-    /* Window Header */
     .dash-header {
       height: 40px;
       background: #131316;
@@ -651,15 +677,8 @@
       transform-style: preserve-3d;
       transform: translateZ(5px);
     }
-    .dash-dots {
-      display: flex;
-      gap: 6px;
-    }
-    .dash-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
+    .dash-dots { display: flex; gap: 6px; }
+    .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
     .dash-dot.red { background: #ff5f56; }
     .dash-dot.yellow { background: #ffbd2e; }
     .dash-dot.green { background: #27c93f; }
@@ -675,7 +694,6 @@
       overflow: hidden;
       transform-style: preserve-3d;
     }
-    /* Dashboard Sidebar with 3D Depth */
     .dash-sidebar {
       width: 180px;
       background: #0a0a0c;
@@ -688,9 +706,7 @@
       transform: translateZ(20px);
     }
     @media (min-width: 576px) {
-      .dash-sidebar {
-        display: flex;
-      }
+      .dash-sidebar { display: flex; }
     }
     .dash-sidebar-item {
       display: flex;
@@ -712,10 +728,7 @@
       border-radius: 50%;
       background: var(--text-dark);
     }
-    .dash-sidebar-item.active .dash-sidebar-dot {
-      background: #fff;
-    }
-    /* Dashboard Main Stage with 3D Depth & Rolex Video background */
+    .dash-sidebar-item.active .dash-sidebar-dot { background: #fff; }
     .dash-stage {
       flex: 1;
       position: relative;
@@ -724,7 +737,6 @@
       transform-style: preserve-3d;
       overflow: hidden;
     }
-    /* Rolex Watch Gears Simulation Background inside Dashboard */
     .watch-engine-container {
       position: absolute;
       inset: 0;
@@ -765,7 +777,6 @@
       border-radius: 50%;
       box-shadow: 0 0 10px #30d158;
     }
-    /* Rolex Camera HUD overlays */
     .rolex-camera-hud {
       position: absolute;
       top: 15px;
@@ -787,11 +798,7 @@
       box-shadow: 0 0 6px #ff453a;
       animation: blink 1s infinite alternate;
     }
-    .rec-indicator {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .rec-indicator { display: flex; align-items: center; gap: 6px; }
     @keyframes blink {
       0% { opacity: 0.2; }
       100% { opacity: 1; }
@@ -833,8 +840,6 @@
       font-weight: 700;
       color: #fff;
     }
-    /* Panel Views styling */
-    /* VIEW 1: PROBLEM (Frag Assessment) */
     .view-frag-cards {
       display: grid;
       grid-template-columns: 1fr;
@@ -842,9 +847,7 @@
       transform-style: preserve-3d;
     }
     @media (min-width: 576px) {
-      .view-frag-cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .view-frag-cards { grid-template-columns: repeat(2, 1fr); }
     }
     .frag-card {
       background: rgba(255, 95, 86, 0.02);
@@ -853,24 +856,9 @@
       padding: 14px;
       transform: translateZ(15px);
     }
-    .frag-card-meta {
-      font-size: 9px;
-      color: #ff5f56;
-      font-weight: 600;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .frag-card-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: #ff5f56;
-    }
-    .frag-card-desc {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 6px;
-      line-height: 1.4;
-    }
+    .frag-card-meta { font-size: 9px; color: #ff5f56; font-weight: 600; text-transform: uppercase; margin-bottom: 6px; }
+    .frag-card-title { font-size: 12px; font-weight: 600; color: #ff5f56; }
+    .frag-card-desc { font-size: 11px; color: var(--text-muted); margin-top: 6px; line-height: 1.4; }
     .view-problem-alert {
       background: rgba(255, 95, 86, 0.05);
       border: 1px solid rgba(255, 95, 86, 0.2);
@@ -879,23 +867,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transform: translateZ(45px); /* Highest projection */
+      transform: translateZ(45px);
       box-shadow: 0 10px 30px rgba(255, 95, 86, 0.1);
     }
-    .problem-alert-text {
-      font-size: 12px;
-      font-weight: 600;
-      color: #ff5f56;
-    }
-    .problem-alert-badge {
-      font-size: 9px;
-      padding: 2px 6px;
-      background: #ff5f56;
-      color: #000;
-      font-weight: 700;
-      border-radius: 4px;
-    }
-    /* VIEW 2: WHAT I BUILT (Live scan console) */
+    .problem-alert-text { font-size: 12px; font-weight: 600; color: #ff5f56; }
+    .problem-alert-badge { font-size: 9px; padding: 2px 6px; background: #ff5f56; color: #000; font-weight: 700; border-radius: 4px; }
     .console-box {
       background: #08080a;
       border: 1px solid rgba(255,255,255,0.05);
@@ -907,14 +883,10 @@
       height: 120px;
       overflow-y: hidden;
       color: #30d158;
-      transform: translateZ(30px); /* Extrudes console block */
+      transform: translateZ(30px);
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     }
-    .console-line {
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 2px solid transparent;
-    }
+    .console-line { white-space: nowrap; overflow: hidden; border-right: 2px solid transparent; }
     .console-warn { color: #ffbd2e; }
     .console-crit { color: #ff453a; font-weight: bold; }
     .console-info { color: #8e8e93; }
@@ -943,32 +915,16 @@
       width: 0%;
       box-shadow: 0 0 6px #30d158;
     }
-    /* VIEW 3: WHAT I LEARNED */
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      transform-style: preserve-3d;
-    }
+    .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; transform-style: preserve-3d; }
     .metric-card {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.05);
       padding: 12px;
       border-radius: 8px;
-      transform: translateZ(25px); /* Extrude data cards */
+      transform: translateZ(25px);
     }
-    .metric-card-label {
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .metric-card-val {
-      font-size: 14px;
-      font-weight: 700;
-      color: #fff;
-    }
+    .metric-card-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 4px; }
+    .metric-card-val { font-size: 14px; font-weight: 700; color: #fff; }
     .chart-block {
       background: rgba(255,255,255,0.01);
       border: 1px solid rgba(255,255,255,0.05);
@@ -981,20 +937,8 @@
       justify-content: space-around;
       transform: translateZ(15px);
     }
-    .chart-bar {
-      width: 20px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 4px 4px 0 0;
-      height: 10%;
-      transition: height 1s ease, background-color 0.5s ease;
-    }
-    /* VIEW 4: TECH STACK */
-    .tech-stack-visual {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transform-style: preserve-3d;
-    }
+    .chart-bar { width: 20px; background: rgba(255,255,255,0.1); border-radius: 4px 4px 0 0; height: 10%; transition: height 1s ease, background-color 0.5s ease; }
+    .tech-stack-visual { display: flex; flex-direction: column; gap: 12px; transform-style: preserve-3d; }
     .tech-stack-layer {
       display: flex;
       justify-content: space-between;
@@ -1005,39 +949,19 @@
       border-radius: 8px;
       transform: translateZ(20px);
     }
-    .layer-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: #fff;
-    }
-    .layer-tech {
-      font-size: 11px;
-      font-family: var(--font-mono);
-      color: var(--text-muted);
-    }
-    /* ACT 4: BUILD VOLUME */
+    .layer-name { font-size: 12px; font-weight: 600; color: #fff; }
+    .layer-tech { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
+
+    /* ===================== BUILD VOLUME ===================== */
     .build-volume {
       padding: 100px 0;
       background: #000;
       border-top: 1px solid var(--border);
       position: relative;
     }
-    .volume-header {
-      margin-bottom: 60px;
-    }
-    .volume-header span {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-    }
-    .volume-header h2 {
-      font-size: clamp(28px, 4.5vw, 48px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      margin-top: 8px;
-    }
+    .volume-header { margin-bottom: 60px; }
+    .volume-header span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+    .volume-header h2 { font-size: clamp(28px, 4.5vw, 48px); font-weight: 900; letter-spacing: -0.04em; margin-top: 8px; }
     .volume-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -1049,9 +973,7 @@
       perspective: 1000px;
     }
     @media (min-width: 992px) {
-      .volume-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      .volume-grid { grid-template-columns: repeat(4, 1fr); }
     }
     .volume-card {
       background: var(--surface);
@@ -1063,9 +985,7 @@
       transition: background 0.3s ease;
       transform-style: preserve-3d;
     }
-    .volume-card:hover {
-      background: #080808;
-    }
+    .volume-card:hover { background: #080808; }
     .volume-num {
       font-size: clamp(3rem, 6vw, 5rem);
       font-weight: 900;
@@ -1075,14 +995,9 @@
       display: inline-block;
       will-change: transform;
     }
-    .volume-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      font-weight: 700;
-    }
-    /* ACT 5: PROJECTS STACK */
+    .volume-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; }
+
+    /* ===================== PROJECTS STACK ===================== */
     .projects-stack-section {
       background: #000;
       padding: 140px 0;
@@ -1096,31 +1011,20 @@
       gap: 24px;
     }
     @media (min-width: 768px) {
-      .projects-stack-title-block {
-        grid-template-columns: 1.2fr 1fr;
-        gap: 60px;
-      }
+      .projects-stack-title-block { grid-template-columns: 1.2fr 1fr; gap: 60px; }
     }
-    .projects-stack-title-block h2 {
-      font-size: clamp(32px, 5vw, 56px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-    .projects-stack-title-block p {
-      font-size: 16px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
+    .projects-stack-title-block h2 { font-size: clamp(32px, 5vw, 56px); font-weight: 900; letter-spacing: -0.04em; }
+    .projects-stack-title-block p { font-size: 16px; color: var(--text-muted); line-height: 1.6; }
     .projects-stack-container {
       position: relative;
       display: flex;
       flex-direction: column;
-      gap: 40px; /* Space between cards */
+      gap: 40px;
       perspective: 1200px;
     }
     .project-card {
       position: sticky;
-      top: 110px; /* Offset from header */
+      top: 110px;
       background: var(--surface-card);
       border: 1px solid var(--border);
       border-radius: 24px;
@@ -1135,28 +1039,10 @@
       will-change: transform;
       transform-style: preserve-3d;
     }
-    .project-card:hover {
-      border-color: var(--border-hover);
-    }
-    .project-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 16px;
-      transform: translateZ(10px);
-    }
-    .project-card-meta {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-    .project-card-icon {
-      font-size: 18px;
-      opacity: 0.3;
-    }
-    /* Branded placeholder visual inside project cards */
+    .project-card:hover { border-color: var(--border-hover); }
+    .project-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; transform: translateZ(10px); }
+    .project-card-meta { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .project-card-icon { font-size: 18px; opacity: 0.3; }
     .project-card-visual {
       height: 130px;
       background: rgba(0, 0, 0, 0.3);
@@ -1172,28 +1058,10 @@
       box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.8);
       transform-style: preserve-3d;
     }
-    .visual-inner-gear {
-      position: absolute;
-      border-radius: 50%;
-      will-change: transform;
-    }
-    .project-card-body {
-      transform: translateZ(15px);
-    }
-    .project-card-body h3 {
-      font-size: clamp(22px, 3vw, 32px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 10px;
-    }
-    .project-card-body p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      max-width: 680px;
-      margin-bottom: 16px;
-    }
-    /* Cards stack dynamic depth z-indexing */
+    .visual-inner-gear { position: absolute; border-radius: 50%; will-change: transform; }
+    .project-card-body { transform: translateZ(15px); }
+    .project-card-body h3 { font-size: clamp(22px, 3vw, 32px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 10px; }
+    .project-card-body p { font-size: 14px; color: var(--text-muted); line-height: 1.5; max-width: 680px; margin-bottom: 16px; }
     .project-card:nth-child(1) { z-index: 1; }
     .project-card:nth-child(2) { z-index: 2; }
     .project-card:nth-child(3) { z-index: 3; }
@@ -1201,43 +1069,15 @@
     .project-card:nth-child(5) { z-index: 5; }
     .project-card:nth-child(6) { z-index: 6; }
     .project-card:nth-child(7) { z-index: 7; }
-    /* ACT 6: CURRENT FOCUS */
-    .focus-section {
-      padding: 120px 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-    }
-    .focus-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    @media (min-width: 992px) {
-      .focus-grid {
-        grid-template-columns: 0.7fr 1.3fr;
-        gap: 80px;
-      }
-    }
-    .focus-left h2 {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-    .focus-left p {
-      font-size: 15px;
-      color: var(--text-muted);
-      margin-top: 12px;
-    }
-    .focus-cards-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-    @media (min-width: 576px) {
-      .focus-cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
+
+    /* ===================== FOCUS ===================== */
+    .focus-section { padding: 120px 0; background: var(--surface); border-top: 1px solid var(--border); }
+    .focus-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+    @media (min-width: 992px) { .focus-grid { grid-template-columns: 0.7fr 1.3fr; gap: 80px; } }
+    .focus-left h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.04em; }
+    .focus-left p { font-size: 15px; color: var(--text-muted); margin-top: 12px; }
+    .focus-cards-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 576px) { .focus-cards-grid { grid-template-columns: repeat(2, 1fr); } }
     .focus-item-card {
       background: var(--surface-card);
       border: 1px solid var(--border);
@@ -1245,155 +1085,41 @@
       padding: 30px;
       transition: border-color 0.3s ease, background 0.3s ease;
     }
-    .focus-item-card:hover {
-      border-color: var(--border-hover);
-      background: var(--surface-card-hover);
-    }
-    .focus-item-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      font-weight: 700;
-      margin-bottom: 16px;
-      display: block;
-    }
-    .focus-item-card h3 {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-    .focus-item-card ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .focus-item-card ul li {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .focus-item-card ul li::before {
-      content: "";
-      width: 4px;
-      height: 4px;
-      background: var(--text-muted);
-      border-radius: 50%;
-    }
-    /* ACT 7: TIMELINE (Horizontal Scroll) */
-    .timeline-section {
-      background: #000;
-      border-top: 1px solid var(--border);
-      position: relative;
-    }
-    .timeline-scroll-container {
-      position: relative;
-      height: 300vh; /* Scroll length for pinning horizontal timeline */
-    }
-    .timeline-sticky {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .timeline-sticky-header {
-      padding-top: 6vh;
-    }
-    .timeline-sticky-header h2 {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-    .timeline-track-container {
-      position: relative;
-      margin-top: 8vh;
-      width: 100%;
-    }
-    /* Horizontal line running through the years */
-    .timeline-wire-bg {
-      position: absolute;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: var(--border);
-      z-index: 1;
-    }
-    .timeline-wire-progress {
-      position: absolute;
-      top: 60px;
-      left: 0;
-      height: 1px;
-      background: #fff;
-      width: 0%;
-      z-index: 2;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-    .timeline-track {
-      display: flex;
-      gap: 150px;
-      padding-left: 0;
-      width: max-content;
-      position: relative;
-      z-index: 10;
-    }
-    @media (min-width: 768px) {
-      .timeline-track {
-        gap: 300px;
-      }
-    }
-    .timeline-node {
-      width: 300px;
-      flex-shrink: 0;
-      position: relative;
-      will-change: transform;
-    }
-    @media (min-width: 768px) {
-      .timeline-node {
-        width: 500px;
-      }
-    }
-    /* The glowing node intersection point */
+    .focus-item-card:hover { border-color: var(--border-hover); background: var(--surface-card-hover); }
+    .focus-item-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; margin-bottom: 16px; display: block; }
+    .focus-item-card h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .focus-item-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .focus-item-card ul li { font-size: 13px; font-weight: 500; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+    .focus-item-card ul li::before { content: ""; width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%; }
+
+    /* ===================== TIMELINE ===================== */
+    .timeline-section { background: #000; border-top: 1px solid var(--border); position: relative; }
+    .timeline-scroll-container { position: relative; height: 300vh; }
+    .timeline-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+    .timeline-sticky-header { padding-top: 6vh; }
+    .timeline-sticky-header h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.04em; }
+    .timeline-track-container { position: relative; margin-top: 8vh; width: 100%; }
+    .timeline-wire-bg { position: absolute; top: 60px; left: 0; width: 100%; height: 1px; background: var(--border); z-index: 1; }
+    .timeline-wire-progress { position: absolute; top: 60px; left: 0; height: 1px; background: #fff; width: 0%; z-index: 2; box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+    .timeline-track { display: flex; gap: 150px; padding-left: 0; width: max-content; position: relative; z-index: 10; }
+    @media (min-width: 768px) { .timeline-track { gap: 300px; } }
+    .timeline-node { width: 300px; flex-shrink: 0; position: relative; will-change: transform; }
+    @media (min-width: 768px) { .timeline-node { width: 500px; } }
     .timeline-point {
-      width: 12px;
-      height: 12px;
+      width: 12px; height: 12px;
       background: var(--bg);
       border: 2px solid var(--text-dark);
       border-radius: 50%;
       position: absolute;
-      top: 55px;
-      left: 0;
+      top: 55px; left: 0;
       transform: translate(-2px);
       z-index: 20;
       transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
       will-change: transform;
     }
-    .timeline-node.active .timeline-point {
-      border-color: #fff;
-      background: #fff;
-      transform: translate(-2px) scale(1.3);
-      box-shadow: 0 0 12px #fff;
-    }
-    .timeline-year {
-      font-size: clamp(5rem, 10vw, 9.5rem);
-      font-weight: 900;
-      line-height: 0.8;
-      letter-spacing: -0.05em;
-      opacity: 0.04;
-      margin-bottom: 40px;
-      transition: opacity 0.5s ease;
-    }
-    .timeline-node.active .timeline-year {
-      opacity: 0.15;
-    }
+    .timeline-node.active .timeline-point { border-color: #fff; background: #fff; transform: translate(-2px) scale(1.3); box-shadow: 0 0 12px #fff; }
+    .timeline-year { font-size: clamp(5rem, 10vw, 9.5rem); font-weight: 900; line-height: 0.8; letter-spacing: -0.05em; opacity: 0.04; margin-bottom: 40px; transition: opacity 0.5s ease; }
+    .timeline-node.active .timeline-year { opacity: 0.15; }
     .timeline-details-card {
       background: var(--surface-card);
       border: 1px solid var(--border);
@@ -1407,61 +1133,18 @@
       transition: border-color 0.5s ease;
       will-change: transform;
     }
-    .timeline-node.active .timeline-details-card {
-      border-color: var(--border-hover);
-    }
-    .timeline-details-card p {
-      font-size: 15px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      white-space: normal;
-    }
-    .timeline-details-card ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .timeline-details-card ul li {
-      font-size: 14px;
-      color: var(--text-muted);
-      white-space: normal;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .timeline-details-card ul li::before {
-      content: "";
-      width: 4px;
-      height: 4px;
-      background: var(--text-muted);
-      border-radius: 50%;
-    }
-    /* ACT 8: SKILLS */
-    .skills-section {
-      padding: 120px 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-    }
-    .skills-header {
-      margin-bottom: 60px;
-    }
-    .skills-header h2 {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-    .skills-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 30px;
-    }
-    @media (min-width: 992px) {
-      .skills-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 40px;
-      }
-    }
+    .timeline-node.active .timeline-details-card { border-color: var(--border-hover); }
+    .timeline-details-card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; white-space: normal; }
+    .timeline-details-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .timeline-details-card ul li { font-size: 14px; color: var(--text-muted); white-space: normal; display: flex; align-items: center; gap: 10px; }
+    .timeline-details-card ul li::before { content: ""; width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%; }
+
+    /* ===================== SKILLS ===================== */
+    .skills-section { padding: 120px 0; background: var(--surface); border-top: 1px solid var(--border); }
+    .skills-header { margin-bottom: 60px; }
+    .skills-header h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.04em; }
+    .skills-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+    @media (min-width: 992px) { .skills-grid { grid-template-columns: repeat(3, 1fr); gap: 40px; } }
     .skills-col {
       background: var(--surface-card);
       border: 1px solid var(--border);
@@ -1469,23 +1152,9 @@
       padding: 40px;
       transition: border-color 0.3s ease;
     }
-    .skills-col:hover {
-      border-color: var(--border-hover);
-    }
-    .skills-col h3 {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 16px;
-    }
-    .skill-pills-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      list-style: none;
-    }
+    .skills-col:hover { border-color: var(--border-hover); }
+    .skills-col h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .skill-pills-list { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; }
     .skill-pills-list li {
       background: rgba(255, 255, 255, 0.03);
       padding: 10px 18px;
@@ -1495,40 +1164,14 @@
       border: 1px solid var(--border);
       transition: border-color 0.3s ease, background 0.3s ease, transform 0.2s ease;
     }
-    .skill-pills-list li:hover {
-      border-color: var(--border-hover);
-      background: rgba(255, 255, 255, 0.06);
-      transform: scale(1.03);
-    }
-    /* ACT 9: THINGS NOBODY ASKED ME TO BUILD & ACT 10: TO RECRUITERS */
-    .narrative-section {
-      padding: 120px 0;
-      background: #000;
-      border-top: 1px solid var(--border);
-    }
-    .narrative-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 60px;
-    }
-    @media (min-width: 992px) {
-      .narrative-grid {
-        grid-template-columns: 1fr 1.2fr;
-        gap: 100px;
-      }
-    }
-    .narrative-left h2 {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      margin-bottom: 24px;
-    }
-    .narrative-left p {
-      font-size: 16px;
-      line-height: 1.7;
-      color: var(--text-muted);
-    }
-    /* Recruiter card framed like a premium terminal pane */
+    .skill-pills-list li:hover { border-color: var(--border-hover); background: rgba(255, 255, 255, 0.06); transform: scale(1.03); }
+
+    /* ===================== NARRATIVE ===================== */
+    .narrative-section { padding: 120px 0; background: #000; border-top: 1px solid var(--border); }
+    .narrative-grid { display: grid; grid-template-columns: 1fr; gap: 60px; }
+    @media (min-width: 992px) { .narrative-grid { grid-template-columns: 1fr 1.2fr; gap: 100px; } }
+    .narrative-left h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.04em; margin-bottom: 24px; }
+    .narrative-left p { font-size: 16px; line-height: 1.7; color: var(--text-muted); }
     .recruiter-pane {
       background: var(--surface-card);
       border: 1px solid var(--border);
@@ -1538,68 +1181,17 @@
       overflow: hidden;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
     }
-    .recruiter-pane-hdr {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 16px;
-    }
-    .recruiter-pane-title {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-    .recruiter-pane-body {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .recruiter-pane-body p strong {
-      color: #fff;
-    }
-    /* ACT 11: FINAL CTA */
-    .cta-section {
-      padding: 160px 0;
-      background: #ffffff;
-      color: #000000;
-      position: relative;
-      text-align: center;
-      border-top: 1px solid var(--border);
-    }
-    .cta-content h2 {
-      font-size: clamp(3rem, 9vw, 8.5rem);
-      font-weight: 900;
-      letter-spacing: -0.06em;
-      line-height: 0.85;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-    }
-    .cta-subtext {
-      font-size: clamp(18px, 3vw, 24px);
-      font-weight: 600;
-      max-width: 680px;
-      margin: 0 auto 50px auto;
-      line-height: 1.5;
-      opacity: 0.7;
-    }
-    .cta-btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      justify-content: center;
-      align-items: center;
-    }
-    @media (min-width: 576px) {
-      .cta-btn-group {
-        flex-direction: row;
-      }
-    }
+    .recruiter-pane-hdr { display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .recruiter-pane-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .recruiter-pane-body { font-size: 15px; line-height: 1.7; color: var(--text-muted); display: flex; flex-direction: column; gap: 20px; }
+    .recruiter-pane-body p strong { color: #fff; }
+
+    /* ===================== CTA ===================== */
+    .cta-section { padding: 160px 0; background: #ffffff; color: #000000; position: relative; text-align: center; border-top: 1px solid var(--border); }
+    .cta-content h2 { font-size: clamp(3rem, 9vw, 8.5rem); font-weight: 900; letter-spacing: -0.06em; line-height: 0.85; text-transform: uppercase; margin-bottom: 40px; }
+    .cta-subtext { font-size: clamp(18px, 3vw, 24px); font-weight: 600; max-width: 680px; margin: 0 auto 50px auto; line-height: 1.5; opacity: 0.7; }
+    .cta-btn-group { display: flex; flex-direction: column; gap: 16px; justify-content: center; align-items: center; }
+    @media (min-width: 576px) { .cta-btn-group { flex-direction: row; } }
     .cta-btn-primary {
       padding: 20px 40px;
       background: #000000;
@@ -1613,10 +1205,7 @@
       transition: background 0.3s ease, transform 0.2s ease;
       display: inline-block;
     }
-    .cta-btn-primary:hover {
-      background: #1c1c1e;
-      transform: translateY(-2px);
-    }
+    .cta-btn-primary:hover { background: #1c1c1e; transform: translateY(-2px); }
     .cta-btn-secondary {
       padding: 20px 40px;
       background: transparent;
@@ -1631,118 +1220,40 @@
       transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
       display: inline-block;
     }
-    .cta-btn-secondary:hover {
-      background: #000000;
-      color: #ffffff;
-      transform: translateY(-2px);
-    }
-    /* Pulse animation keyframe */
+    .cta-btn-secondary:hover { background: #000000; color: #ffffff; transform: translateY(-2px); }
+
+    /* ===================== ANIMATIONS ===================== */
     @keyframes pulse {
-      0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.7);
-      }
-      70% {
-        transform: scale(1);
-        box-shadow: 0 0 0 6px rgba(48, 209, 88, 0);
-      }
-      100% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(48, 209, 88, 0);
-      }
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(48, 209, 88, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(48, 209, 88, 0); }
     }
-    /* RESPONSIVE LAYOUT FALLBACKS */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===================== RESPONSIVE ===================== */
     @media (max-width: 991px) {
-      .floating-bg-blob {
-        display: none !important;
-      }
-      .featured-scroll-container {
-        height: auto !important;
-      }
-      .featured-sticky {
-        position: relative !important;
-        height: auto !important;
-        top: 0 !important;
-        overflow: visible !important;
-      }
-      .featured-sticky-grid {
-        display: flex !important;
-        flex-direction: column !important;
-        padding: 60px 0 !important;
-        gap: 40px !important;
-      }
-      .featured-left-pane {
-        height: auto !important;
-      }
-      .featured-left-scroller {
-        position: relative !important;
-        height: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 80px !important; /* Spacing between the steps */
-      }
-      .featured-step-content {
-        position: relative !important;
-        opacity: 1 !important;
-        pointer-events: all !important;
-        transform: none !important;
-        margin-bottom: 0 !important;
-      }
-      .featured-right-pane {
-        height: 400px !important;
-        order: -1; /* Place dashboard mock at the top */
-      }
-      .dashboard-mock {
-        transform: none !important;
-      }
-      /* Stacking cards normal scroll on mobile */
-      .project-card {
-        position: relative !important;
-        top: 0 !important;
-        margin-bottom: 20px !important;
-        box-shadow: none !important;
-        min-height: auto !important;
-        transform: none !important;
-      }
-      /* Mobile timeline vertical fallbacks */
-      .timeline-scroll-container {
-        height: auto !important;
-      }
-      .timeline-sticky {
-        position: relative !important;
-        height: auto !important;
-        top: 0 !important;
-        overflow: visible !important;
-        padding: 60px 0 !important;
-      }
-      .timeline-track-container {
-        margin-top: 40px !important;
-      }
-      .timeline-wire-bg, .timeline-wire-progress {
-        display: none !important;
-      }
-      .timeline-track {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 40px !important;
-        padding-left: 0 !important;
-        width: 100% !important;
-      }
-      .timeline-node {
-        width: 100% !important;
-        transform: none !important;
-      }
-      .timeline-point {
-        display: none !important;
-      }
-      .timeline-year {
-        opacity: 0.15 !important;
-        margin-bottom: 10px !important;
-      }
-      .timeline-details-card {
-        margin-top: 0 !important;
-        transform: none !important;
-      }
+      .floating-bg-blob { display: none !important; }
+      .featured-scroll-container { height: auto !important; }
+      .featured-sticky { position: relative !important; height: auto !important; top: 0 !important; overflow: visible !important; }
+      .featured-sticky-grid { display: flex !important; flex-direction: column !important; padding: 60px 0 !important; gap: 40px !important; }
+      .featured-left-pane { height: auto !important; }
+      .featured-left-scroller { position: relative !important; height: auto !important; display: flex !important; flex-direction: column !important; gap: 80px !important; }
+      .featured-step-content { position: relative !important; opacity: 1 !important; pointer-events: all !important; transform: none !important; margin-bottom: 0 !important; }
+      .featured-right-pane { height: 400px !important; order: -1; }
+      .dashboard-mock { transform: none !important; }
+      .project-card { position: relative !important; top: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; min-height: auto !important; transform: none !important; }
+      .timeline-scroll-container { height: auto !important; }
+      .timeline-sticky { position: relative !important; height: auto !important; top: 0 !important; overflow: visible !important; padding: 60px 0 !important; }
+      .timeline-track-container { margin-top: 40px !important; }
+      .timeline-wire-bg, .timeline-wire-progress { display: none !important; }
+      .timeline-track { display: flex !important; flex-direction: column !important; gap: 40px !important; padding-left: 0 !important; width: 100% !important; }
+      .timeline-node { width: 100% !important; transform: none !important; }
+      .timeline-point { display: none !important; }
+      .timeline-year { opacity: 0.15 !important; margin-bottom: 10px !important; }
+      .timeline-details-card { margin-top: 0 !important; transform: none !important; }
     }
   </style>
 </head>
@@ -1758,118 +1269,42 @@
     (function() {
       const overlay = document.getElementById('introOverlay');
       const video = document.getElementById('introVideo');
-
-      
-
-      // fallback: if video doesn't start within 2s, attempt to hide overlay
-      const fallbackTimer = setTimeout(() => {
-        console.log('VIDEO ERROR');
-        hideOverlay();
-      }, 2000);
-
-      // safety cap: keep overlay until video ends or max 3.5s
-      const maxHold = 3500; // milliseconds
-      const maxHoldTimer = setTimeout(() => {
-        console.log('VIDEO MAX HOLD REACHED');
-        hideOverlay();
-      }, maxHold);
-
-      if (!video) {
-        console.log('VIDEO ERROR');
-        hideOverlay();
-        return;
-      }
-
-      video.addEventListener('loadeddata', () => {
-        console.log('VIDEO LOADED');
-      }, { once: true });
-
-      video.addEventListener('playing', () => {
-        console.log('VIDEO PLAYING');
-        clearTimeout(fallbackTimer);
-      }, { once: true });
-
-      video.addEventListener('ended', () => {
-        console.log('VIDEO ENDED');
-        clearTimeout(fallbackTimer);
-        clearTimeout(maxHoldTimer);
-        hideOverlay();
-      }, { once: true });
-
-      video.addEventListener('error', (event) => {
-        console.log('VIDEO ERROR', event);
-        clearTimeout(fallbackTimer);
-        clearTimeout(maxHoldTimer);
-        hideOverlay();
-      }, { once: true });
-
+      const fallbackTimer = setTimeout(() => { hideOverlay(); }, 2000);
+      const maxHoldTimer = setTimeout(() => { hideOverlay(); }, 3500);
+      if (!video) { hideOverlay(); return; }
+      video.addEventListener('playing', () => { clearTimeout(fallbackTimer); }, { once: true });
+      video.addEventListener('ended', () => { clearTimeout(fallbackTimer); clearTimeout(maxHoldTimer); hideOverlay(); }, { once: true });
+      video.addEventListener('error', () => { clearTimeout(fallbackTimer); clearTimeout(maxHoldTimer); hideOverlay(); }, { once: true });
       const setBodyLocked = (locked) => {
-        if (locked) {
-          document.body.classList.add('intro-active');
-        } else {
-          document.body.classList.remove('intro-active');
-        }
+        if (locked) { document.body.classList.add('intro-active'); }
+        else { document.body.classList.remove('intro-active'); }
       };
-
       const hideOverlay = () => {
         if (!overlay || overlay.dataset.hiding) return;
         overlay.dataset.hiding = '1';
         setBodyLocked(false);
-
         const cleanup = () => {
-          if (overlay) {
-            overlay.style.pointerEvents = 'none';
-            overlay.style.display = 'none';
-            overlay.style.visibility = 'hidden';
-            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-          }
+          if (overlay) { overlay.style.pointerEvents = 'none'; overlay.style.display = 'none'; if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }
           const main = document.getElementById('mainContent');
-          if (main) {
-            main.classList.add('loaded');
-            startHeroReveal();
-          }
+          if (main) { main.classList.add('loaded'); startHeroReveal(); }
         };
-
-        try {
-          overlay.style.transition = 'opacity 0.55s ease 0.3s';
-          overlay.style.opacity = '0';
-        } catch (e) {}
-
-        overlay.addEventListener('transitionend', function onEnd() {
-          overlay.removeEventListener('transitionend', onEnd);
-          cleanup();
-        });
-        // safety fallback if transitionend doesn't fire
-        setTimeout(() => {
-          cleanup();
-        }, 1100);
+        try { overlay.style.transition = 'opacity 0.55s ease 0.3s'; overlay.style.opacity = '0'; } catch(e) {}
+        overlay.addEventListener('transitionend', function onEnd() { overlay.removeEventListener('transitionend', onEnd); cleanup(); });
+        setTimeout(() => { cleanup(); }, 1100);
       };
-
       setBodyLocked(true);
-
       const playVideo = () => {
-        video.play().catch((err) => {
-          console.log('VIDEO ERROR', err);
-          clearTimeout(fallbackTimer);
-          hideOverlay();
-        });
+        video.play().catch(() => { clearTimeout(fallbackTimer); hideOverlay(); });
       };
-
-      if (document.readyState !== 'loading') {
-        playVideo();
-      } else {
-        document.addEventListener('DOMContentLoaded', playVideo, { once: true });
-      }
+      if (document.readyState !== 'loading') { playVideo(); }
+      else { document.addEventListener('DOMContentLoaded', playVideo, { once: true }); }
     })();
   </script>
   <script>
     window.history.scrollRestoration = 'manual';
-    window.addEventListener('load', () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    });
+    window.addEventListener('load', () => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); });
   </script>
-  <!-- Background Lighting Layers -->
-  <!-- Fixed Navigation Header -->
+
   <div id="mainContent">
   <header>
     <div class="nav-left">
@@ -1887,15 +1322,24 @@
     </nav>
     <div class="nav-right">
       Bloch Laisullah
-      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=blochlaisullah@gmail.com" target="_blank" rel="noopener noreferrer" style="margin-left:14px;color:var(--text-muted);font-size:13px;text-decoration:none;">Email</a>
     </div>
   </header>
+
   <div class="viewport">
-    
     <!-- ACT 1: HERO -->
     <section class="hero" id="hero">
+
+      <!-- ✅ CINEMATIC BACKGROUND VIDEO -->
+      <video class="hero-bg-video" autoplay muted loop playsinline preload="auto">
+        <source src="screenshots/vid.mp4" type="video/mp4">
+      </video>
+      <!-- Dark gradient overlay — keeps text readable -->
+      <div class="hero-video-overlay"></div>
+
+      <!-- Grid lines on top of video -->
       <div class="hero-grid-bg"></div>
       <div class="hero-grid-gradient"></div>
+
       <div class="container hero-content">
         <div class="hero-main">
           <div class="hero-subtitle-pill">
@@ -1907,14 +1351,15 @@
             <span class="word"><span class="char">T</span><span class="char">h</span><span class="char">i</span><span class="char">n</span><span class="char">g</span><span class="char">s</span><span class="char">.</span></span>
           </h1>
           <p class="hero-desc">
-            I learn by building. From Python automation scripts to AI-assisted security tools, I use projects as a way to understand how systems work, break, scale, and improve.
+            Most of my projects started with:
+            <br>
+            "What happens if...?"
           </p>
           <div class="featured-btn-group" style="margin-top: 30px;">
             <a href="https://mail.google.com/mail/?view=cm&fs=1&to=blochlaisullah@gmail.com" target="_blank" rel="noopener noreferrer" class="btn-primary">Email Contact</a>
             <a href="https://www.linkedin.com/in/bloch-laisullah-8881923b8" target="_blank" class="btn-secondary">LinkedIn Profile</a>
           </div>
         </div>
-        
         <div class="hero-footer">
           <div class="hero-metrics">
             <div class="hero-metric-item">
@@ -1932,76 +1377,51 @@
           </div>
           <div class="hero-location">
             <div style="display:flex;align-items:center;gap:12px;">
-              <div>
-                Bloch Laisullah
-              </div>
+              <div>Bloch Laisullah</div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
     <!-- ACT 2: ABOUT ME -->
     <section class="about" id="about">
       <div class="container">
         <div class="about-grid">
           <div class="about-left">
             <h2 class="reveal-text">
-              I am a Cybersecurity and AI/ML student focused on practical learning through project development.
-            </h2>
+                I am a Cybersecurity and AI/ML student focused on practical learning through project development.
+              </h2>
           </div>
-          
           <div class="about-right">
             <div class="about-right-text">
               Rather than only studying concepts, I prefer building projects that help me understand how technology works in real environments.
             </div>
-            
             <ul class="interests-list">
-              <li class="interest-item">
-                <div class="interest-dot"></div>
-                Vulnerability Assessment & Penetration Testing
-              </li>
-              <li class="interest-item">
-                <div class="interest-dot"></div>
-                Security Monitoring & SIEM
-              </li>
-              <li class="interest-item">
-                <div class="interest-dot"></div>
-                Python Automation
-              </li>
-              <li class="interest-item">
-                <div class="interest-dot"></div>
-                Web Application Security
-              </li>
-              <li class="interest-item">
-                <div class="interest-dot"></div>
-                AI-Assisted Security Workflows
-              </li>
+              <li class="interest-item"><div class="interest-dot"></div>Vulnerability Assessment & Penetration Testing</li>
+              <li class="interest-item"><div class="interest-dot"></div>Security Monitoring & SIEM</li>
+              <li class="interest-item"><div class="interest-dot"></div>Python Automation</li>
+              <li class="interest-item"><div class="interest-dot"></div>Web Application Security</li>
+              <li class="interest-item"><div class="interest-dot"></div>AI-Assisted Security Workflows</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
-    <!-- ACT 3: FEATURED PROJECT (AI-VAPT Showcase with Sticky Scroll) -->
+
+    <!-- ACT 3: FEATURED PROJECT -->
     <section class="featured-project-section" id="featured">
       <div class="featured-scroll-container">
         <div class="featured-sticky">
           <div class="container">
             <div class="featured-sticky-grid">
-              
-              <!-- Left Side Content Steps -->
               <div class="featured-left-pane">
                 <div class="featured-left-scroller">
-                  
-                  <!-- Step 1: Summary -->
                   <div class="featured-step-content active" data-step="1">
                     <span class="featured-tag">Flagship Build</span>
                     <h2>AI-VAPT</h2>
-                    <p>
-                      An AI-assisted Vulnerability Assessment and Penetration Testing platform designed to improve security workflows, observation management, and reporting processes.
-                    </p>
-                    <p>
-                      The goal is to bridge the gap between raw security findings and actionable insights through automation and intelligent analysis.
-                    </p>
+                    <p>An AI-assisted Vulnerability Assessment and Penetration Testing platform designed to improve security workflows, observation management, and reporting processes.</p>
+                    <p>The goal is to bridge the gap between raw security findings and actionable insights through automation and intelligent analysis.</p>
                     <div class="project-highlights-grid">
                       <div class="highlight-pill"><div class="highlight-bullet"></div>Attack Surface Analysis</div>
                       <div class="highlight-pill"><div class="highlight-bullet"></div>Observation Management</div>
@@ -2010,52 +1430,36 @@
                       <div class="highlight-pill"><div class="highlight-bullet"></div>Dashboard Interface</div>
                     </div>
                   </div>
-                  <!-- Step 2: Problem -->
                   <div class="featured-step-content" data-step="2">
                     <span class="featured-tag">The Challenge</span>
                     <h2>Problem</h2>
-                    <p>
-                      Manual reporting and observation tracking consume significant time during security assessments.
-                    </p>
-                    <p>
-                      Security findings often become fragmented across different tools and workflows.
-                    </p>
+                    <p>Manual reporting and observation tracking consume significant time during security assessments.</p>
+                    <p>Security findings often become fragmented across different tools and workflows.</p>
                     <div class="featured-btn-group">
                       <a href="https://laisullah.github.io/AI-VAPT-Project/" target="_blank" class="btn-primary">Live Demo</a>
                       <a href="https://www.linkedin.com/in/bloch-laisullah-8881923b8" target="_blank" class="btn-secondary">Project Case Study</a>
                     </div>
                   </div>
-                  <!-- Step 3: What I Built -->
                   <div class="featured-step-content" data-step="3">
                     <span class="featured-tag">The Solution</span>
                     <h2>What I Built</h2>
-                    <p>
-                      A centralized platform that combines reconnaissance data, vulnerability observations, and AI-assisted analysis into a unified workflow.
-                    </p>
+                    <p>A centralized platform that combines reconnaissance data, vulnerability observations, and AI-assisted analysis into a unified workflow.</p>
                     <div class="featured-btn-group">
                       <a href="https://laisullah.github.io/AI-VAPT-Project/" target="_blank" class="btn-primary">Live Demo</a>
                       <a href="https://www.linkedin.com/in/bloch-laisullah-8881923b8" target="_blank" class="btn-secondary">Project Case Study</a>
                     </div>
                   </div>
-                  <!-- Step 4: What I Learned & Tech Stack -->
                   <div class="featured-step-content" data-step="4">
                     <span class="featured-tag">Insights & Stack</span>
                     <h2>What I Learned</h2>
-                    <p style="margin-bottom: 16px;">
-                      VAPT Methodologies // Security Reporting // Frontend Architecture // Python Automation // User Experience Design.
-                    </p>
+                    <p style="margin-bottom: 16px;">VAPT Methodologies // Security Reporting // Frontend Architecture // Python Automation // User Experience Design.</p>
                     <span class="featured-tag" style="margin-top: 20px; display: block;">Tech Stack</span>
                     <ul class="featured-tech-list">
-                      <li>Python</li>
-                      <li>JavaScript</li>
-                      <li>HTML</li>
-                      <li>CSS</li>
-                      <li>AI Integration Concepts</li>
+                      <li>Python</li><li>JavaScript</li><li>HTML</li><li>CSS</li><li>AI Integration Concepts</li>
                     </ul>
                   </div>
                 </div>
               </div>
-              <!-- Right Side Sticky Interactive Mock Dashboard -->
               <div class="featured-right-pane">
                 <div class="dashboard-mock">
                   <div class="dash-header">
@@ -2067,60 +1471,33 @@
                     <span class="dash-title">ai-vapt-session.log</span>
                     <div style="width: 38px;"></div>
                   </div>
-                  
                   <div class="dash-body">
                     <div class="dash-sidebar">
-                      <div class="dash-sidebar-item active">
-                        <div class="dash-sidebar-dot"></div>
-                        Scan Engine
-                      </div>
-                      <div class="dash-sidebar-item">
-                        <div class="dash-sidebar-dot"></div>
-                        Observations
-                      </div>
-                      <div class="dash-sidebar-item">
-                        <div class="dash-sidebar-dot"></div>
-                        AI Insights
-                      </div>
-                      <div class="dash-sidebar-item">
-                        <div class="dash-sidebar-dot"></div>
-                        Reports
-                      </div>
+                      <div class="dash-sidebar-item active"><div class="dash-sidebar-dot"></div>Scan Engine</div>
+                      <div class="dash-sidebar-item"><div class="dash-sidebar-dot"></div>Observations</div>
+                      <div class="dash-sidebar-item"><div class="dash-sidebar-dot"></div>AI Insights</div>
+                      <div class="dash-sidebar-item"><div class="dash-sidebar-dot"></div>Reports</div>
                     </div>
-                    
                     <div class="dash-stage">
-                      
-                      <!-- Rolex Video HUD HUD -->
                       <div class="rolex-camera-hud">
-                        <div class="rec-indicator">
-                          <div class="hud-rec-dot"></div>
-                          <span>REC</span>
-                        </div>
+                        <div class="rec-indicator"><div class="hud-rec-dot"></div><span>REC</span></div>
                         <div class="timecode">00:00:00:00</div>
                         <div>LENS 2.4x</div>
                       </div>
-                      <!-- Rolex Gears mechanical clockwork background -->
                       <div class="watch-engine-container">
                         <div class="engine-gear gear-outer"></div>
                         <div class="engine-gear gear-middle"></div>
                         <div class="engine-gear gear-inner"></div>
                         <div class="engine-axis"></div>
                       </div>
-                      <!-- View 1: Summary / Scan Engine -->
                       <div class="dash-view-panel active" id="view-step-1">
                         <div class="dash-panel-header">
                           <div class="dash-panel-label">Dashboard View</div>
                           <div class="dash-panel-title">Scanning Console</div>
                         </div>
                         <div class="metric-grid" style="margin-bottom: 16px;">
-                          <div class="metric-card">
-                            <div class="metric-card-label">Assets Found</div>
-                            <div class="metric-card-val">12 Active</div>
-                          </div>
-                          <div class="metric-card">
-                            <div class="metric-card-label">Vuln Index</div>
-                            <div class="metric-card-val">Medium</div>
-                          </div>
+                          <div class="metric-card"><div class="metric-card-label">Assets Found</div><div class="metric-card-val">12 Active</div></div>
+                          <div class="metric-card"><div class="metric-card-label">Vuln Index</div><div class="metric-card-val">Medium</div></div>
                         </div>
                         <div class="chart-block">
                           <div class="chart-bar" style="height: 40%; background: #30d158;"></div>
@@ -2130,30 +1507,20 @@
                           <div class="chart-bar" style="height: 50%; background: #ffbd2e;"></div>
                         </div>
                       </div>
-                      <!-- View 2: Problem (Scattered Data) -->
                       <div class="dash-view-panel" id="view-step-2">
                         <div class="dash-panel-header">
                           <div class="dash-panel-label">Observation Alert</div>
                           <div class="dash-panel-title">Isolated Vulnerability</div>
                         </div>
                         <div class="view-frag-cards" style="margin-bottom: 14px;">
-                          <div class="frag-card">
-                            <div class="frag-card-meta">Log fragment</div>
-                            <div class="frag-card-title">Port Scan</div>
-                            <div class="frag-card-desc">No correlation mapping.</div>
-                          </div>
-                          <div class="frag-card">
-                            <div class="frag-card-meta">Excel File</div>
-                            <div class="frag-card-title">CVE-2024-X</div>
-                            <div class="frag-card-desc">Static report data.</div>
-                          </div>
+                          <div class="frag-card"><div class="frag-card-meta">Log fragment</div><div class="frag-card-title">Port Scan</div><div class="frag-card-desc">No correlation mapping.</div></div>
+                          <div class="frag-card"><div class="frag-card-meta">Excel File</div><div class="frag-card-title">CVE-2024-X</div><div class="frag-card-desc">Static report data.</div></div>
                         </div>
                         <div class="view-problem-alert">
                           <span class="problem-alert-text">Alert Fatigue Level: High</span>
                           <span class="problem-alert-badge">Critical</span>
                         </div>
                       </div>
-                      <!-- View 3: What I Built (Console log active) -->
                       <div class="dash-view-panel" id="view-step-3">
                         <div class="dash-panel-header">
                           <div class="dash-panel-label">Integration Active</div>
@@ -2168,31 +1535,19 @@
                         </div>
                         <div class="scan-status-row">
                           <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">Scanning Target: API</span>
-                          <div class="scan-progress-bar">
-                            <div class="scan-progress-fill" style="width: 85%;"></div>
-                          </div>
+                          <div class="scan-progress-bar"><div class="scan-progress-fill" style="width: 85%;"></div></div>
                           <span style="font-size: 11px; font-family: var(--font-mono); color: #30d158;">85%</span>
                         </div>
                       </div>
-                      <!-- View 4: What I Learned & Stack layers -->
                       <div class="dash-view-panel" id="view-step-4">
                         <div class="dash-panel-header">
                           <div class="dash-panel-label">System Architecture</div>
                           <div class="dash-panel-title">Modular Security Layers</div>
                         </div>
                         <div class="tech-stack-visual">
-                          <div class="tech-stack-layer">
-                            <span class="layer-name">Data Script Engine</span>
-                            <span class="layer-tech">Python / Automations</span>
-                          </div>
-                          <div class="tech-stack-layer">
-                            <span class="layer-name">Frontend Logic</span>
-                            <span class="layer-tech">JavaScript / CSS Grid</span>
-                          </div>
-                          <div class="tech-stack-layer">
-                            <span class="layer-name">Analysis Layer</span>
-                            <span class="layer-tech">AI Integration Models</span>
-                          </div>
+                          <div class="tech-stack-layer"><span class="layer-name">Data Script Engine</span><span class="layer-tech">Python / Automations</span></div>
+                          <div class="tech-stack-layer"><span class="layer-name">Frontend Logic</span><span class="layer-tech">JavaScript / CSS Grid</span></div>
+                          <div class="tech-stack-layer"><span class="layer-name">Analysis Layer</span><span class="layer-tech">AI Integration Models</span></div>
                         </div>
                       </div>
                     </div>
@@ -2204,6 +1559,7 @@
         </div>
       </div>
     </section>
+
     <!-- ACT 4: BUILD VOLUME -->
     <section class="build-volume" id="volume">
       <div class="container">
@@ -2211,46 +1567,25 @@
           <span>Obsession Metrics</span>
           <h2>Build Volume</h2>
         </div>
-        
         <div class="volume-grid">
-          <div class="volume-card">
-            <div class="volume-num">9+</div>
-            <div class="volume-label">Projects Finished</div>
-          </div>
-          <div class="volume-card">
-            <div class="volume-num">14+</div>
-            <div class="volume-label">Experiments Created</div>
-          </div>
-          <div class="volume-card">
-            <div class="volume-num">12+</div>
-            <div class="volume-label">Technologies Used</div>
-          </div>
-          <div class="volume-card">
-            <div class="volume-num">5+</div>
-            <div class="volume-label">Security Labs</div>
-          </div>
+          <div class="volume-card"><div class="volume-num">9+</div><div class="volume-label">Projects Finished</div></div>
+          <div class="volume-card"><div class="volume-num">14+</div><div class="volume-label">Experiments Created</div></div>
+          <div class="volume-card"><div class="volume-num">12+</div><div class="volume-label">Technologies Used</div></div>
+          <div class="volume-card"><div class="volume-num">5+</div><div class="volume-label">Security Labs</div></div>
         </div>
       </div>
     </section>
-    <!-- ACT 5: THINGS I BUILT (Stacking Cards) -->
+
+    <!-- ACT 5: THINGS I BUILT -->
     <section class="projects-stack-section" id="projects">
       <div class="container">
-        
         <div class="projects-stack-title-block">
           <h2>Things I Built</h2>
-          <p>
-            Most of these projects started from curiosity. Nobody assigned them. Nobody requested them. I built them because I wanted to understand how they worked.
-          </p>
+          <p>Most of these projects started from curiosity. Nobody assigned them. Nobody requested them. I built them because I wanted to understand how they worked.</p>
         </div>
         <div class="projects-stack-container">
-          
-          <!-- Card 1: AI-VAPT -->
           <div class="project-card">
-            <div class="project-card-header">
-              <span class="project-card-meta">Flagship Platform</span>
-              <span class="project-card-icon">01</span>
-            </div>
-            <!-- Custom Branded Placeholder Visual (Rolex-style mechanical sweep) -->
+            <div class="project-card-header"><span class="project-card-meta">Flagship Platform</span><span class="project-card-icon">01</span></div>
             <div class="project-card-visual" id="visual-ai-vapt">
               <div class="visual-inner-gear gear-outer"></div>
               <div class="visual-inner-gear gear-inner" style="border-color: rgba(48, 209, 88, 0.4);"></div>
@@ -2258,43 +1593,29 @@
             </div>
             <div class="project-card-body">
               <h3>AI-VAPT</h3>
-              <p>
-                AI-assisted VAPT workflow platform focused on reporting, observation tracking, and security analysis.
-              </p>
+              <p>AI-assisted VAPT workflow platform focused on reporting, observation tracking, and security analysis.</p>
               <div class="featured-btn-group">
                 <a href="https://laisullah.github.io/AI-VAPT-Project/" target="_blank" class="btn-primary" style="padding: 10px 20px; font-size: 11px;">Live Demo</a>
                 <a href="https://www.linkedin.com/in/bloch-laisullah-8881923b8" target="_blank" class="btn-secondary" style="padding: 10px 20px; font-size: 11px;">LinkedIn Case Study</a>
               </div>
             </div>
           </div>
-          <!-- Card 2: SIEM Monitoring Hub -->
           <div class="project-card">
-            <div class="project-card-header">
-              <span class="project-card-meta">Defensive Ops</span>
-              <span class="project-card-icon">02</span>
-            </div>
-            <!-- Custom Branded Placeholder Visual -->
+            <div class="project-card-header"><span class="project-card-meta">Defensive Ops</span><span class="project-card-icon">02</span></div>
             <div class="project-card-visual" id="visual-siem">
               <div style="position: absolute; width: 80%; height: 2px; background: rgba(0, 191, 255, 0.2); box-shadow: 0 0 10px #00bfff; animation: pulse 2s infinite;"></div>
               <div style="z-index: 10; font-family: var(--font-mono); font-size: 10px; color: #00bfff; text-shadow: 0 0 10px #00bfff;">SIEM_LOG_TRIAGE_ACTIVE</div>
             </div>
             <div class="project-card-body">
               <h3>SIEM Monitoring Hub</h3>
-              <p>
-                Developed a centralized security monitoring dashboard focused on log aggregation, event correlation, and real-time threat detection. Implemented alert classification systems and built custom dashboards for SOC analysts to streamline incident response workflows.
-              </p>
+              <p>Developed a centralized security monitoring dashboard focused on log aggregation, event correlation, and real-time threat detection.</p>
               <div class="featured-btn-group">
                 <span class="btn-primary" style="padding: 10px 20px; font-size: 11px; opacity: 0.6; cursor: not-allowed;">In Development</span>
               </div>
             </div>
           </div>
-          <!-- Card 3: Speech-to-Text Converter -->
           <div class="project-card">
-            <div class="project-card-header">
-              <span class="project-card-meta">Automation Script</span>
-              <span class="project-card-icon">03</span>
-            </div>
-            <!-- Custom Branded Placeholder Visual (Waveform visualization) -->
+            <div class="project-card-header"><span class="project-card-meta">Automation Script</span><span class="project-card-icon">03</span></div>
             <div class="project-card-visual" id="visual-speech" style="flex-direction: row; gap: 4px;">
               <div style="width: 4px; height: 30px; background: #ffbd2e; border-radius: 4px; animation: pulse 1s infinite alternate;"></div>
               <div style="width: 4px; height: 50px; background: #ffbd2e; border-radius: 4px; animation: pulse 0.8s infinite alternate 0.2s;"></div>
@@ -2305,21 +1626,14 @@
             </div>
             <div class="project-card-body">
               <h3>Speech-to-Text Converter</h3>
-              <p>
-                Built a robust Python automation utility for converting audio files to structured text output. Integrated speech recognition APIs and implemented error handling for various audio formats. Includes batch processing capabilities and text normalization features.
-              </p>
+              <p>Built a robust Python automation utility for converting audio files to structured text output with batch processing capabilities.</p>
               <div class="featured-btn-group">
                 <span class="btn-primary" style="padding: 10px 20px; font-size: 11px; opacity: 0.6; cursor: not-allowed;">Code Repository</span>
               </div>
             </div>
           </div>
-          <!-- Card 4: Hytayn -->
           <div class="project-card">
-            <div class="project-card-header">
-              <span class="project-card-meta">Responsive Hub</span>
-              <span class="project-card-icon">04</span>
-            </div>
-            <!-- Custom Branded Placeholder Visual -->
+            <div class="project-card-header"><span class="project-card-meta">Responsive Hub</span><span class="project-card-icon">04</span></div>
             <div class="project-card-visual" id="visual-hytayn">
               <div style="width: 60px; height: 40px; border: 1px solid rgba(138, 43, 226, 0.4); background: rgba(138, 43, 226, 0.05); border-radius: 4px; position: absolute; transform: rotate(-5deg) translate(-20px);"></div>
               <div style="width: 60px; height: 40px; border: 1px dashed rgba(138, 43, 226, 0.6); background: rgba(138, 43, 226, 0.1); border-radius: 4px; position: absolute; transform: rotate(5deg) translate(20px);"></div>
@@ -2327,22 +1641,15 @@
             </div>
             <div class="project-card-body">
               <h3>Hytayn</h3>
-              <p>
-                Portfolio and project showcase platform focused on modern UI architecture and content presentation.
-              </p>
+              <p>Portfolio and project showcase platform focused on modern UI architecture and content presentation.</p>
               <div class="featured-btn-group">
                 <a href="https://laisullah.github.io/Hytayn/" target="_blank" class="btn-primary" style="padding: 10px 20px; font-size: 11px;">Live Demo</a>
                 <a href="https://www.linkedin.com/in/bloch-laisullah-8881923b8" target="_blank" class="btn-secondary" style="padding: 10px 20px; font-size: 11px;">LinkedIn Case Study</a>
               </div>
             </div>
           </div>
-          <!-- Card 5: Netflix Clone -->
           <div class="project-card">
-            <div class="project-card-header">
-              <span class="project-card-meta">Structure Study</span>
-              <span class="project-card-icon">05</span>
-            </div>
-            <!-- Custom Branded Placeholder Visual -->
+            <div class="project-card-header"><span class="project-card-meta">Structure Study</span><span class="project-card-icon">05</span></div>
             <div class="project-card-visual" id="visual-netflix">
               <div style="width: 120px; height: 60px; border: 1px solid rgba(229, 9, 20, 0.3); background: rgba(229, 9, 20, 0.02); display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 4px;">
                 <div style="width: 32px; height: 24px; background: rgba(229, 9, 20, 0.2); border-radius: 2px;"></div>
@@ -2356,21 +1663,14 @@
             </div>
             <div class="project-card-body">
               <h3>Netflix Clone</h3>
-              <p>
-                Frontend learning project focused on understanding large-scale layout systems, responsive grid design, and dynamic content rendering. Built with modern CSS Grid and JavaScript state management to simulate streaming platform functionality.
-              </p>
+              <p>Frontend learning project focused on understanding large-scale layout systems, responsive grid design, and dynamic content rendering.</p>
               <div class="featured-btn-group">
                 <span class="btn-primary" style="padding: 10px 20px; font-size: 11px; opacity: 0.6; cursor: not-allowed;">Frontend Project</span>
               </div>
             </div>
           </div>
-          <!-- Card 6: Cricket Game -->
           <div class="project-card">
-            <div class="project-card-header">
-              <span class="project-card-meta">Logic Interaction</span>
-              <span class="project-card-icon">06</span>
-            </div>
-            <!-- Custom Branded Placeholder Visual -->
+            <div class="project-card-header"><span class="project-card-meta">Logic Interaction</span><span class="project-card-icon">06</span></div>
             <div class="project-card-visual" id="visual-cricket">
               <div style="width: 140px; height: 50px; border: 1px solid rgba(0, 250, 154, 0.3); border-radius: 4px; display: flex; align-items: center; justify-content: space-around; padding: 10px;">
                 <div style="font-family: var(--font-mono); font-size: 14px; color: #00fa9a; animation: pulse 0.5s infinite alternate;">SCORE: 184/3</div>
@@ -2379,21 +1679,14 @@
             </div>
             <div class="project-card-body">
               <h3>Cricket Game</h3>
-              <p>
-                Interactive browser game built to master JavaScript event handling, DOM manipulation, and real-time state management. Implemented score tracking, player logic, and match simulation mechanics to deepen understanding of game development principles.
-              </p>
+              <p>Interactive browser game built to master JavaScript event handling, DOM manipulation, and real-time state management.</p>
               <div class="featured-btn-group">
                 <span class="btn-primary" style="padding: 10px 20px; font-size: 11px; opacity: 0.6; cursor: not-allowed;">Game Project</span>
               </div>
             </div>
           </div>
-          <!-- Card 7: Security Labs -->
           <div class="project-card">
-            <div class="project-card-header">
-              <span class="project-card-meta">Vulnerability Research</span>
-              <span class="project-card-icon">07</span>
-            </div>
-            <!-- Custom Branded Placeholder Visual -->
+            <div class="project-card-header"><span class="project-card-meta">Vulnerability Research</span><span class="project-card-icon">07</span></div>
             <div class="project-card-visual" id="visual-sec-labs">
               <div class="visual-inner-gear gear-outer" style="width: 150px; height: 150px; border-color: rgba(220, 20, 60, 0.2);"></div>
               <div style="width: 80px; height: 80px; border: 1.5px dashed rgba(220, 20, 60, 0.4); border-radius: 50%; position: absolute; animation: spin 10s linear infinite;"></div>
@@ -2401,9 +1694,7 @@
             </div>
             <div class="project-card-body">
               <h3>Security Labs</h3>
-              <p>
-                Hands-on cybersecurity lab environment covering OWASP Top 10 vulnerabilities, network reconnaissance techniques, and penetration testing methodologies. Includes practical exercises on SQL injection, XSS, authentication flaws, and security research documentation.
-              </p>
+              <p>Hands-on cybersecurity lab environment covering OWASP Top 10 vulnerabilities, network reconnaissance techniques, and penetration testing methodologies.</p>
               <div class="featured-btn-group">
                 <span class="btn-primary" style="padding: 10px 20px; font-size: 11px; opacity: 0.6; cursor: not-allowed;">Lab Environment</span>
               </div>
@@ -2412,29 +1703,19 @@
         </div>
       </div>
     </section>
+
     <!-- ACT 6: CURRENT FOCUS -->
     <section class="focus-section" id="focus">
       <div class="container">
         <div class="focus-grid">
-          
           <div class="focus-left">
             <h2>Current Focus</h2>
             <p>What I am currently learning, building, exploring, and aiming for in my day-to-day work.</p>
           </div>
-          
           <div class="focus-right">
             <div class="focus-cards-grid">
-              
-              <div class="focus-item-card">
-                <span class="focus-item-label">Learning</span>
-                <h3>Advanced Web Application Security</h3>
-              </div>
-              
-              <div class="focus-item-card">
-                <span class="focus-item-label">Building</span>
-                <h3>AI-VAPT Platform</h3>
-              </div>
-              
+              <div class="focus-item-card"><span class="focus-item-label">Learning</span><h3>Advanced Web Application Security</h3></div>
+              <div class="focus-item-card"><span class="focus-item-label">Building</span><h3>AI-VAPT Platform</h3></div>
               <div class="focus-item-card">
                 <span class="focus-item-label">Exploring</span>
                 <h3>Topics</h3>
@@ -2444,32 +1725,23 @@
                   <li>Automation Workflows</li>
                 </ul>
               </div>
-              
-              <div class="focus-item-card">
-                <span class="focus-item-label">Goal</span>
-                <h3>Land my first Cybersecurity Internship</h3>
-              </div>
+              <div class="focus-item-card"><span class="focus-item-label">Goal</span><h3>Land my first Cybersecurity Internship</h3></div>
             </div>
           </div>
         </div>
       </div>
     </section>
-    <!-- ACT 7: TIMELINE (Horizontal Scroll) -->
+
+    <!-- ACT 7: TIMELINE -->
     <section class="timeline-section" id="timeline">
       <div class="timeline-scroll-container">
         <div class="timeline-sticky">
-          <div class="container timeline-sticky-header">
-            <h2>Timeline</h2>
-          </div>
-          
+          <div class="container timeline-sticky-header"><h2>Timeline</h2></div>
           <div class="timeline-track-container">
             <div class="timeline-wire-bg"></div>
             <div class="timeline-wire-progress"></div>
-            
             <div class="container">
               <div class="timeline-track">
-                
-                <!-- Node 2024 -->
                 <div class="timeline-node active">
                   <div class="timeline-point"></div>
                   <div class="timeline-year">2024</div>
@@ -2477,15 +1749,10 @@
                     <span class="featured-tag">Foundations</span>
                     <p>Learning Foundations: Mastering structure, UI responsiveness, and state handling in the browser via games and clones.</p>
                     <ul>
-                      <li>Built Netflix Clone</li>
-                      <li>Built Cricket Game</li>
-                      <li>Learned JavaScript Fundamentals</li>
-                      <li>Explored Frontend Development</li>
-                      <li>Improved UI Design Skills</li>
+                      <li>Built Netflix Clone</li><li>Built Cricket Game</li><li>Learned JavaScript Fundamentals</li><li>Explored Frontend Development</li><li>Improved UI Design Skills</li>
                     </ul>
                   </div>
                 </div>
-                <!-- Node 2025 -->
                 <div class="timeline-node">
                   <div class="timeline-point"></div>
                   <div class="timeline-year">2025</div>
@@ -2493,15 +1760,10 @@
                     <span class="featured-tag">Automation Phase</span>
                     <p>Automation Phase: Shifted toward Python scripts, audio processing utilities, and modular project showcase galleries (Hytayn).</p>
                     <ul>
-                      <li>Built Speech-to-Text Converter</li>
-                      <li>Built Hytayn</li>
-                      <li>Created Python Automation Tools</li>
-                      <li>Explored Networking Concepts</li>
-                      <li>Started Cybersecurity Learning</li>
+                      <li>Built Speech-to-Text Converter</li><li>Built Hytayn</li><li>Created Python Automation Tools</li><li>Explored Networking Concepts</li><li>Started Cybersecurity Learning</li>
                     </ul>
                   </div>
                 </div>
-                <!-- Node 2026 -->
                 <div class="timeline-node">
                   <div class="timeline-point"></div>
                   <div class="timeline-year">2026</div>
@@ -2509,11 +1771,7 @@
                     <span class="featured-tag">Cybersecurity Focus</span>
                     <p>Cybersecurity Focus: Building flagship AI-VAPT systems and lab-hardening SOC triaging workflows. Candidate phase.</p>
                     <ul>
-                      <li>Built AI-VAPT</li>
-                      <li>Worked on SIEM Concepts</li>
-                      <li>Conducted Security Labs</li>
-                      <li>Focused on OWASP Methodologies</li>
-                      <li>Preparing for Cybersecurity Internships</li>
+                      <li>Built AI-VAPT</li><li>Worked on SIEM Concepts</li><li>Conducted Security Labs</li><li>Focused on OWASP Methodologies</li><li>Preparing for Cybersecurity Internships</li>
                     </ul>
                   </div>
                 </div>
@@ -2523,70 +1781,37 @@
         </div>
       </div>
     </section>
+
     <!-- ACT 8: SKILLS -->
     <section class="skills-section" id="skills">
       <div class="container">
-        <div class="skills-header">
-          <h2>Technical Skills</h2>
-        </div>
-        
+        <div class="skills-header"><h2>Technical Skills</h2></div>
         <div class="skills-grid">
-          
-          <!-- Column 1: Cybersecurity -->
           <div class="skills-col">
             <h3>Cybersecurity</h3>
-            <ul class="skill-pills-list">
-              <li>VAPT</li>
-              <li>OWASP Top 10</li>
-              <li>Network Security</li>
-              <li>Security Research</li>
-              <li>Reconnaissance</li>
-            </ul>
+            <ul class="skill-pills-list"><li>VAPT</li><li>OWASP Top 10</li><li>Network Security</li><li>Security Research</li><li>Reconnaissance</li></ul>
           </div>
-          
-          <!-- Column 2: Defensive -->
           <div class="skills-col">
             <h3>Defensive Security</h3>
-            <ul class="skill-pills-list">
-              <li>SIEM</li>
-              <li>Log Analysis</li>
-              <li>Alert Correlation</li>
-              <li>SOC Fundamentals</li>
-            </ul>
+            <ul class="skill-pills-list"><li>SIEM</li><li>Log Analysis</li><li>Alert Correlation</li><li>SOC Fundamentals</li></ul>
           </div>
-          
-          <!-- Column 3: Development -->
           <div class="skills-col">
             <h3>Development</h3>
-            <ul class="skill-pills-list">
-              <li>Python</li>
-              <li>JavaScript</li>
-              <li>HTML</li>
-              <li>CSS</li>
-              <li>Git</li>
-              <li>Automation</li>
-            </ul>
+            <ul class="skill-pills-list"><li>Python</li><li>JavaScript</li><li>HTML</li><li>CSS</li><li>Git</li><li>Automation</li></ul>
           </div>
         </div>
       </div>
     </section>
-    <!-- ACT 9: THINGS NOBODY ASKED ME TO BUILD & ACT 10: TO RECRUITERS -->
+
+    <!-- ACT 9 & 10: NARRATIVE -->
     <section class="narrative-section">
       <div class="container">
         <div class="narrative-grid">
-          
-          <!-- Left side: Things Nobody Asked me to build -->
           <div class="narrative-left">
             <h2>Things Nobody Asked Me To Build</h2>
-            <p>
-              Some projects were created to solve problems. Some were created because I was curious. Some were built simply to learn.
-            </p>
-            <p style="margin-top: 20px;">
-              Every project taught me something new. That process of building, experimenting, and improving is what drives me forward.
-            </p>
+            <p>Some projects were created to solve problems. Some were created because I was curious. Some were built simply to learn.</p>
+            <p style="margin-top: 20px;">Every project taught me something new. That process of building, experimenting, and improving is what drives me forward.</p>
           </div>
-          
-          <!-- Right side: To Recruiters -->
           <div class="narrative-right">
             <div class="recruiter-pane">
               <div class="recruiter-pane-hdr">
@@ -2594,43 +1819,31 @@
                 <span class="nav-status-text">Internship Target 2026</span>
               </div>
               <div class="recruiter-pane-body">
-                <p>
-                  I do not claim to know everything. I am still learning. What I bring is curiosity, consistency, and a habit of building projects to understand technology in practice.
-                </p>
-                <p>
-                  Through cybersecurity projects, automation tools, and web applications, I continue to improve my technical and analytical skills.
-                </p>
-                <p>
-                  I am currently looking for <strong>Cybersecurity, VAPT, SOC Analyst, and Security Analyst internship opportunities</strong>.
-                </p>
-                <p>
-                  If you are looking for someone who learns by building, I would love to connect.
-                </p>
+                <p>I do not claim to know everything. I am still learning. What I bring is curiosity, consistency, and a habit of building projects to understand technology in practice.</p>
+                <p>Through cybersecurity projects, automation tools, and web applications, I continue to improve my technical and analytical skills.</p>
+                <p>I am currently looking for <strong>Cybersecurity, VAPT, SOC Analyst, and Security Analyst internship opportunities</strong>.</p>
+                <p>If you are looking for someone who learns by building, I would love to connect.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
     <!-- ACT 11: FINAL CTA -->
     <section class="cta-section" id="contact">
       <div class="container cta-content">
         <h2>I Build Things<br>Until They Work.</h2>
-        <div class="cta-subtext">
-          Cybersecurity. AI. Automation.
-        </div>
-        <p style="margin: -20px auto 40px auto; max-width: 600px; font-weight: 500; font-size: 18px; color: var(--text-dark);">
-          Let's Build Something Useful.
-        </p>
+        <div class="cta-subtext">Cybersecurity. AI. Automation.</div>
+        <p style="margin: -20px auto 40px auto; max-width: 600px; font-weight: 500; font-size: 18px; color: var(--text-dark);">Let's Build Something Useful.</p>
         <div class="cta-btn-group">
-          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=blochlaisullah@gmail.com" target="_blank" rel="noopener noreferrer" class="cta-btn-primary">Email Contact</a>
           <a href="https://www.linkedin.com/in/bloch-laisullah-8881923b8" target="_blank" class="cta-btn-secondary">LinkedIn Profile</a>
         </div>
       </div>
     </section>
   </div>
+
   <script>
-    // Initialize Lenis for Smooth Scrolling
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -2641,184 +1854,72 @@
       touchMultiplier: 2,
       infinite: false,
     });
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
-    // Register GSAP ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
-    // Connect Lenis with ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
     gsap.ticker.lagSmoothing(0);
-    // --- ANTI-GRAVITY INTERACTION SYSTEM ---
-    // 1. Background System blobs very slow drifting (Apple Vision Pro-style reflections)
-    gsap.to(".blob-1", {
-      x: "12vw",
-      y: "12vh",
-      duration: 35,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut"
-    });
-    gsap.to(".blob-2", {
-      x: "-12vw",
-      y: "-12vh",
-      duration: 45,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut"
-    });
-    // 2. Hero: Letters of "I BUILD THINGS." slowly drift in 3D space
-    const chars = document.querySelectorAll(".hero-main .char");
 
+    gsap.to(".blob-1", { x: "12vw", y: "12vh", duration: 35, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    gsap.to(".blob-2", { x: "-12vw", y: "-12vh", duration: 45, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+    const chars = document.querySelectorAll(".hero-main .char");
     let heroReveal;
     const setupHeroReveal = () => {
       if (heroReveal) return;
       heroReveal = gsap.timeline({ paused: true })
-        .from("header", {
-          opacity: 0,
-          y: -20,
-          duration: 0.6,
-          ease: "power3.out"
-        })
-        .from(".hero-subtitle-pill", {
-          opacity: 0,
-          y: 30,
-          duration: 0.5,
-          ease: "power3.out"
-        }, "-=0.35")
-        .fromTo(".hero-main", {
-          opacity: 0,
-          y: 40,
-          filter: "blur(20px)"
-        }, {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          duration: 1.2,
-          ease: "power3.out",
-          clearProps: "filter"
-        }, "-=0.35")
-        .from(chars, {
-          opacity: 0,
-          y: 80,
-          stagger: 0.05,
-          duration: 1.0,
-          ease: "power3.out"
-        }, "-=0.95")
-        .from(".hero-desc", {
-          opacity: 0,
-          y: 30,
-          duration: 0.6,
-          ease: "power3.out"
-        }, "-=0.9")
-        .from(".featured-btn-group a", {
-          opacity: 0,
-          y: 20,
-          stagger: 0.15,
-          duration: 0.6,
-          ease: "power3.out"
-        }, "-=0.75")
-        .from(".hero-metric-item", {
-          opacity: 0,
-          y: 20,
-          stagger: 0.1,
-          duration: 0.6,
-          ease: "power3.out"
-        }, "-=0.65");
+        .from("header", { opacity: 0, y: -20, duration: 0.6, ease: "power3.out" })
+        .from(".hero-subtitle-pill", { opacity: 0, y: 30, duration: 0.5, ease: "power3.out" }, "-=0.35")
+        .fromTo(".hero-main", { opacity: 0, y: 40, filter: "blur(20px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.2, ease: "power3.out", clearProps: "filter" }, "-=0.35")
+        .from(chars, { opacity: 0, y: 80, stagger: 0.05, duration: 1.0, ease: "power3.out" }, "-=0.95")
+        .from(".hero-desc", { opacity: 0, y: 30, duration: 0.6, ease: "power3.out" }, "-=0.9")
+        .from(".featured-btn-group a", { opacity: 0, y: 20, stagger: 0.15, duration: 0.6, ease: "power3.out" }, "-=0.75")
+        .from(".hero-metric-item", { opacity: 0, y: 20, stagger: 0.1, duration: 0.6, ease: "power3.out" }, "-=0.65");
     };
-
     const startHeroReveal = () => {
       const main = document.getElementById('mainContent');
-      if (main) {
-        gsap.to(main, {
-          opacity: 1,
-          duration: 0.55,
-          ease: "power3.out"
-        });
-      }
+      if (main) { gsap.to(main, { opacity: 1, duration: 0.55, ease: "power3.out" }); }
       setupHeroReveal();
-      if (heroReveal) {
-        heroReveal.play();
-      }
+      if (heroReveal) { heroReveal.play(); }
     };
 
-    // Set up loop for drifting chars
     chars.forEach((char) => {
-      gsap.to(char, {
-        x: "random(-6, 6)",
-        y: "random(-6, 6)",
-        z: "random(-8, 8)",
-        rotationX: "random(-3, 3)",
-        rotationY: "random(-3, 3)",
-        duration: "random(6, 9)",
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
+      gsap.to(char, { x: "random(-6, 6)", y: "random(-6, 6)", z: "random(-8, 8)", rotationX: "random(-3, 3)", rotationY: "random(-3, 3)", duration: "random(6, 9)", repeat: -1, yoyo: true, ease: "sine.inOut" });
     });
-    // Timecode ticking logic for Rolex-style HUD
+
     const tcEl = document.querySelector(".timecode");
     if (tcEl) {
-      let frames = 0;
-      let seconds = 0;
-      let minutes = 0;
-      let hours = 0;
+      let frames = 0, seconds = 0, minutes = 0, hours = 0;
       setInterval(() => {
         frames++;
-        if (frames >= 30) {
-          frames = 0;
-          seconds++;
-        }
-        if (seconds >= 60) {
-          seconds = 0;
-          minutes++;
-        }
-        if (minutes >= 60) {
-          minutes = 0;
-          hours++;
-        }
-        const format = (val) => String(val).padStart(2, '0');
-        tcEl.textContent = `${format(hours)}:${format(minutes)}:${format(seconds)}:${format(frames)}`;
-      }, 33.33); // 30fps update
+        if (frames >= 30) { frames = 0; seconds++; }
+        if (seconds >= 60) { seconds = 0; minutes++; }
+        if (minutes >= 60) { minutes = 0; hours++; }
+        const f = (v) => String(v).padStart(2, '0');
+        tcEl.textContent = `${f(hours)}:${f(minutes)}:${f(seconds)}:${f(frames)}`;
+      }, 33.33);
     }
-    // Rolex gears looping rotation loops
+
     gsap.to(".gear-outer", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
     gsap.to(".gear-middle", { rotation: -360, duration: 25, repeat: -1, ease: "none" });
     gsap.to(".gear-inner", { rotation: 360, duration: 15, repeat: -1, ease: "none" });
-    // 3. About Me: Apple-style scroll reveal text
+
     const revealText = document.querySelector(".reveal-text");
     if (revealText) {
       const textContent = revealText.textContent.trim();
       revealText.innerHTML = textContent.split(" ").map(word => `<span>${word} </span>`).join("");
-      
       const spans = revealText.querySelectorAll("span");
-      
-      gsap.to(spans, {
-        color: "#ffffff",
-        stagger: 0.05,
-        scrollTrigger: {
-          trigger: ".about",
-          start: "top 75%",
-          end: "bottom 60%",
-          scrub: true,
-        }
-      });
+      gsap.to(spans, { color: "#ffffff", stagger: 0.05, scrollTrigger: { trigger: ".about", start: "top 75%", end: "bottom 60%", scrub: true } });
     }
-    // 4. Responsive GSAP triggers using matchMedia
+
     let mm = gsap.matchMedia();
     const stepContents = document.querySelectorAll(".featured-step-content");
     const dashPanels = document.querySelectorAll(".dash-view-panel");
     const dashSidebarItems = document.querySelectorAll(".dash-sidebar-item");
     const timelineNodes = document.querySelectorAll(".timeline-node");
-    // DESKTOP ANIMATIONS (>991px)
+
     mm.add("(min-width: 992px)", () => {
-      
-      // Featured Project ScrollTrigger & 3D tilt
       ScrollTrigger.create({
         trigger: ".featured-scroll-container",
         start: "top top",
@@ -2826,132 +1927,35 @@
         scrub: true,
         onUpdate: (self) => {
           const progress = self.progress;
-          let activeIndex = 0;
-          
-          if (progress < 0.25) {
-            activeIndex = 0;
-          } else if (progress >= 0.25 && progress < 0.5) {
-            activeIndex = 1;
-          } else if (progress >= 0.5 && progress < 0.75) {
-            activeIndex = 2;
-          } else {
-            activeIndex = 3;
-          }
-          stepContents.forEach((step, idx) => {
-            if (idx === activeIndex) {
-              step.classList.add("active");
-            } else {
-              step.classList.remove("active");
-            }
-          });
+          let activeIndex = progress < 0.25 ? 0 : progress < 0.5 ? 1 : progress < 0.75 ? 2 : 3;
+          stepContents.forEach((step, idx) => { step.classList.toggle("active", idx === activeIndex); });
           dashPanels.forEach((panel, idx) => {
-            if (idx === activeIndex) {
-              panel.classList.add("active");
-              if (activeIndex === 2) {
-                const progressFill = document.querySelector(".scan-progress-fill");
-                if (progressFill) progressFill.style.width = "100%";
-              }
-            } else {
-              panel.classList.remove("active");
+            panel.classList.toggle("active", idx === activeIndex);
+            if (idx === activeIndex && activeIndex === 2) {
+              const pf = document.querySelector(".scan-progress-fill");
+              if (pf) pf.style.width = "100%";
             }
           });
-          dashSidebarItems.forEach((item, idx) => {
-            if (idx === activeIndex) {
-              item.classList.add("active");
-            } else {
-              item.classList.remove("active");
-            }
-          });
+          dashSidebarItems.forEach((item, idx) => { item.classList.toggle("active", idx === activeIndex); });
         }
       });
-      // Subtle 3D rotation tilt of VAPT Dashboard on scroll
-      gsap.to(".dashboard-mock", {
-        rotationY: 2,
-        rotationX: -2,
-        y: -15,
-        scrollTrigger: {
-          trigger: ".featured-scroll-container",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1
-        }
-      });
-      // Rolex-style background gears zoom/shift on scroll
-      gsap.to(".watch-engine-container", {
-        scale: 1.25,
-        y: -30,
-        scrollTrigger: {
-          trigger: ".featured-scroll-container",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1
-        }
-      });
-      // Project Cards: Weights, suspended scroll rotations & micro-drift loops
+      gsap.to(".dashboard-mock", { rotationY: 2, rotationX: -2, y: -15, scrollTrigger: { trigger: ".featured-scroll-container", start: "top bottom", end: "bottom top", scrub: 1 } });
+      gsap.to(".watch-engine-container", { scale: 1.25, y: -30, scrollTrigger: { trigger: ".featured-scroll-container", start: "top bottom", end: "bottom top", scrub: 1 } });
+
       const cards = gsap.utils.toArray(".project-card");
       cards.forEach((card, index) => {
-        // Stacking card parallax transitions
         if (index < cards.length - 1) {
-          gsap.to(card, {
-            scale: 0.94 - (cards.length - index) * 0.01,
-            opacity: 0.6,
-            rotationX: -2,
-            scrollTrigger: {
-              trigger: cards[index + 1],
-              start: "top 120px",
-              end: "top 80px",
-              scrub: true,
-            }
-          });
+          gsap.to(card, { scale: 0.94 - (cards.length - index) * 0.01, opacity: 0.6, rotationX: -2, scrollTrigger: { trigger: cards[index + 1], start: "top 120px", end: "top 80px", scrub: true } });
         }
-        // Suspended spatial drift as cards scroll in/out
-        gsap.fromTo(card, 
-          { rotationX: 4, rotationY: -4, y: 50 },
-          { 
-            rotationX: 0, 
-            rotationY: 0, 
-            y: 0,
-            scrollTrigger: {
-              trigger: card,
-              start: "top bottom",
-              end: "top 120px",
-              scrub: 0.5
-            }
-          }
-        );
-        // Constant floating drift loop to keep them feeling weightless when idle
-        gsap.to(card, {
-          y: "+=6",
-          rotationX: "random(-1.2, 1.2)",
-          rotationY: "random(-1.2, 1.2)",
-          duration: 6 + index,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut"
-        });
-        // Parallel parallax zoom inside project visual panes
+        gsap.fromTo(card, { rotationX: 4, rotationY: -4, y: 50 }, { rotationX: 0, rotationY: 0, y: 0, scrollTrigger: { trigger: card, start: "top bottom", end: "top 120px", scrub: 0.5 } });
+        gsap.to(card, { y: "+=6", rotationX: "random(-1.2, 1.2)", rotationY: "random(-1.2, 1.2)", duration: 6 + index, repeat: -1, yoyo: true, ease: "sine.inOut" });
         const paneVisual = card.querySelector(".project-card-visual");
-        if (paneVisual) {
-          gsap.to(paneVisual, {
-            y: -15,
-            scale: 1.05,
-            scrollTrigger: {
-              trigger: card,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1
-            }
-          });
-        }
+        if (paneVisual) { gsap.to(paneVisual, { y: -15, scale: 1.05, scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 1 } }); }
       });
-      // Horizontal Timeline
+
       const timelineTrack = document.querySelector(".timeline-track");
       if (timelineTrack) {
-        const getScrollAmount = () => {
-          let trackWidth = timelineTrack.scrollWidth;
-          let windowWidth = window.innerWidth;
-          return -(trackWidth - windowWidth * 0.9);
-        };
+        const getScrollAmount = () => -(timelineTrack.scrollWidth - window.innerWidth * 0.9);
         const timelineTimeline = gsap.timeline({
           scrollTrigger: {
             trigger: ".timeline-scroll-container",
@@ -2959,140 +1963,47 @@
             end: "bottom bottom",
             scrub: true,
             onUpdate: (self) => {
-              const progress = self.progress;
-              const activeIndex = Math.min(
-                timelineNodes.length - 1,
-                Math.floor(progress * timelineNodes.length)
-              );
-              timelineNodes.forEach((node, idx) => {
-                if (idx === activeIndex) {
-                  node.classList.add("active");
-                } else {
-                  node.classList.remove("active");
-                }
-              });
+              const activeIndex = Math.min(timelineNodes.length - 1, Math.floor(self.progress * timelineNodes.length));
+              timelineNodes.forEach((node, idx) => { node.classList.toggle("active", idx === activeIndex); });
             }
           }
         });
-        timelineTimeline.to(timelineTrack, {
-          x: getScrollAmount,
-          ease: "none",
-        });
-        timelineTimeline.to(".timeline-wire-progress", {
-          width: "100%",
-          ease: "none",
-        }, "<");
+        timelineTimeline.to(timelineTrack, { x: getScrollAmount, ease: "none" });
+        timelineTimeline.to(".timeline-wire-progress", { width: "100%", ease: "none" }, "<");
       }
-      // Timeline nodes checkpoint floats
-      const timelineNodesArray = gsap.utils.toArray(".timeline-node");
-      timelineNodesArray.forEach((node, idx) => {
-        gsap.to(node, {
-          y: idx % 2 === 0 ? "+=8" : "-=8",
-          duration: 5 + (idx * 0.5),
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut"
-        });
+
+      gsap.utils.toArray(".timeline-node").forEach((node, idx) => {
+        gsap.to(node, { y: idx % 2 === 0 ? "+=8" : "-=8", duration: 5 + (idx * 0.5), repeat: -1, yoyo: true, ease: "sine.inOut" });
       });
     });
-    // MOBILE FALLBACKS (<992px)
+
     mm.add("(max-width: 991px)", () => {
-      // Ensure all timeline nodes are lit up as they are statically visible
       timelineNodes.forEach(node => node.classList.add("active"));
-      
-      // Default dashboard mock to show the console logs scan view
       dashPanels.forEach((panel, idx) => {
-        if (idx === 2) {
-          panel.classList.add("active");
-          const progressFill = document.querySelector(".scan-progress-fill");
-          if (progressFill) progressFill.style.width = "75%";
-        } else {
-          panel.classList.remove("active");
-        }
+        if (idx === 2) { panel.classList.add("active"); const pf = document.querySelector(".scan-progress-fill"); if (pf) pf.style.width = "75%"; }
+        else { panel.classList.remove("active"); }
       });
-      dashSidebarItems.forEach((item, idx) => {
-        if (idx === 2) item.classList.add("active");
-        else item.classList.remove("active");
-      });
+      dashSidebarItems.forEach((item, idx) => { item.classList.toggle("active", idx === 2); });
     });
-    // 5. Build Volume: Numbers float independently on loops & have scroll parallax
+
     const volumeNums = document.querySelectorAll(".volume-num");
+    volumeNums.forEach((num, idx) => {
+      gsap.to(num, { y: "+=8", x: "random(-2, 2)", rotation: "random(-1.5, 1.5)", duration: 5 + idx, repeat: -1, yoyo: true, ease: "sine.inOut" });
+      gsap.to(num, { y: -30 * (idx % 2 === 0 ? 1 : 1.4), scrollTrigger: { trigger: ".build-volume", start: "top bottom", end: "bottom top", scrub: 1 } });
+    });
+    gsap.from(".volume-card", { opacity: 0, y: 40, stagger: 0.1, duration: 0.8, scrollTrigger: { trigger: ".build-volume", start: "top 80%", toggleActions: "play none none reverse" } });
+    gsap.from(".focus-item-card", { opacity: 0, x: 30, stagger: 0.1, duration: 0.8, scrollTrigger: { trigger: ".focus-section", start: "top 75%" } });
+    gsap.from(".skills-col", { opacity: 0, y: 30, stagger: 0.1, duration: 0.8, scrollTrigger: { trigger: ".skills-section", start: "top 80%" } });
+    gsap.from(".cta-content h2", { opacity: 0, y: 50, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".cta-section", start: "top 75%" } });
+
     
-    // Slow drift loop
-    volumeNums.forEach((num, idx) => {
-      gsap.to(num, {
-        y: "+=8",
-        x: "random(-2, 2)",
-        rotation: "random(-1.5, 1.5)",
-        duration: 5 + idx,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
-    });
-    // Scroll vertical parallax layers
-    volumeNums.forEach((num, idx) => {
-      gsap.to(num, {
-        y: -30 * (idx % 2 === 0 ? 1 : 1.4),
-        scrollTrigger: {
-          trigger: ".build-volume",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1
-        }
-      });
-    });
-    gsap.from(".volume-card", {
-      opacity: 0,
-      y: 40,
-      stagger: 0.1,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: ".build-volume",
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
-    });
-    // 6. Focus Cards Grid Entrance
-    gsap.from(".focus-item-card", {
-      opacity: 0,
-      x: 30,
-      stagger: 0.1,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: ".focus-section",
-        start: "top 75%",
-      }
-    });
-    // 7. Skills Columns Entrance
-    gsap.from(".skills-col", {
-      opacity: 0,
-      y: 30,
-      stagger: 0.1,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: ".skills-section",
-        start: "top 80%",
-      }
-    });
-    // 8. CTA Text Reveal
-    gsap.from(".cta-content h2", {
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".cta-section",
-        start: "top 75%",
-      }
-    });
   </script>
-</div>
+  </div>
+
   <footer class="site-footer">
     <div style="text-align:center;padding:20px 0;color:var(--text-muted);">
-      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=blochlaisullah@gmail.com" target="_blank" rel="noopener noreferrer" style="color:var(--text);text-decoration:none;font-weight:600;">Email</a>
     </div>
   </footer>
-</div> <!-- #mainContent -->
+</div>
 </body>
 </html>
